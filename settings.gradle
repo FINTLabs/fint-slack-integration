@@ -3,4 +3,4 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-rootProject.name = 'fint-slack-command'
+rootProject.name = 'fint-slack-integration'

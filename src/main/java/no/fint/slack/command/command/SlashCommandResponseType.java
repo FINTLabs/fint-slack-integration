@@ -1,4 +1,4 @@
-package no.fint.slack.command;
+package no.fint.slack.command.command;
 
 public enum SlashCommandResponseType {
     ;

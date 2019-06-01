@@ -8,7 +8,7 @@ import com.github.seratch.jslack.api.model.block.composition.PlainTextObject;
 import com.github.seratch.jslack.app_backend.slash_commands.response.SlashCommandResponse;
 import no.fint.ApplicationConfig;
 import no.fint.slack.command.Emoji;
-import no.fint.slack.command.SlashCommandResponseType;
+import no.fint.slack.command.command.SlashCommandResponseType;
 import no.fint.slack.command.model.HealthCheckResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,6 @@ import reactor.core.publisher.Flux;
 import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class HealthService {
