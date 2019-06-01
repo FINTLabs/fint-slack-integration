@@ -4,7 +4,7 @@ import no.fint.slack.command.command.CommandParser
 import no.fint.slack.command.command.Commands
 import spock.lang.Specification
 
-class CommandParserSpoc extends Specification {
+class CommandParserSpec extends Specification {
 
     def "Parse with only command "() {
         when:
