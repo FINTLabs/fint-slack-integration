@@ -16,8 +16,12 @@ public class ApplicationConfig {
     private String apiStatusUrl;
 
     @Getter
-    @Value("${fint.apistatus.environments:api,beta,play-with-fint}")
+    @Value("${fint.environments:api,beta,play-with-fint}")
     private List<String> environments;
+
+    @Getter
+    @Value("${fint.slack.token}")
+    private String slackToken;
 
 
     @Bean

@@ -7,6 +7,11 @@ import java.util.Optional;
 public class CommandParser {
 
     public static Optional<Command> parse(String commandText) {
+
+        if (commandText ==  null) {
+            return Optional.empty();
+        }
+
         List<String> commands = Arrays.asList(commandText.split("\\s+"));
 
         if (commands.isEmpty()) {
@@ -26,6 +31,11 @@ public class CommandParser {
         if (commands.get(1).equals("health")) {
             return createHealthCommand(commands);
         }
+        /*
+        else if (commands.get(1).equals("envs")) {
+            creat
+        }
+         */
         return Optional.empty();
 
     }
