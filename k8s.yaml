@@ -45,7 +45,7 @@ spec:
               memory: "128Mi"
               cpu: "100m"
           ports:
-            - containerPort: 8081
+            - containerPort: 8080
           env:
             - name: TZ
               value: Europe/Oslo
