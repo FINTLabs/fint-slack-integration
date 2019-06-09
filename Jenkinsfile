@@ -9,10 +9,11 @@ pipeline {
         stage('Publish') {
             when { branch 'master' }
             steps {
+                sh "docker tag ${GIT_COMMIT} fintlabs.azurecr.io/slack-integration:build.${BUILD_NUMBER}"
                 withDockerRegistry([credentialsId: 'fintlabs.azurecr.io', url: 'https://fintlabs.azurecr.io']) {
-                    sh "docker tag ${GIT_COMMIT} fintlabs.azurecr.io/slack-integration:build.${BUILD_NUMBER}"
                     sh "docker push fintlabs.azurecr.io/slack-integration:build.${BUILD_NUMBER}"
                 }
+                kubernetesDeploy configs: 'k8s.yaml', kubeconfigId: 'aks-beta-fint'
             }
         }
         stage('Publish PR') {
