@@ -5,6 +5,7 @@ import com.github.seratch.jslack.app_backend.slash_commands.payload.SlashCommand
 import com.github.seratch.jslack.app_backend.slash_commands.response.SlashCommandResponse;
 import lombok.extern.slf4j.Slf4j;
 import no.fint.ApplicationConfig;
+import no.fint.slack.command.Emoji;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,7 @@ public class CommandController {
 
         if (config.getSlackToken().equals(slashCommandPayload.getToken())) {
             return ResponseEntity.ok(commandExecuter.execute(slashCommandPayload.getText()).orElse(SlashCommandResponse.builder()
-                    .text("*This is not a valid command* :headwall:")
+                    .text("*This is not a valid command* " + Emoji.HEADWALL)
                     .responseType(SlashCommandResponseType.EPHEMERAL)
                     .build()));
         }

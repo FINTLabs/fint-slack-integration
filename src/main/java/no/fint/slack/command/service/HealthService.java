@@ -19,10 +19,14 @@ import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static no.fint.ApplicationConfig.TargetService.ServiceTypes.HEALTH;
+import static no.fint.ApplicationConfig.TargetService;
+
 @Service
 public class HealthService {
 
     @Autowired
+    @TargetService(HEALTH)
     private WebClient healthWebClient;
 
     @Autowired
@@ -35,8 +39,6 @@ public class HealthService {
                 .blocks(getLayoutBlocks(environment))
                 .responseType(SlashCommandResponseType.EPHEMERAL)
                 .build();
-
-
     }
 
     public SlashCommandResponse getHealth() {

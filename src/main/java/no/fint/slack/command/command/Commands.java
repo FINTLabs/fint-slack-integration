@@ -16,7 +16,8 @@ public enum Commands {
     public enum Sub {
         HEALTH,
         ASSETS,
-        ENVS;
+        ENVS,
+        CLIENTS;
 
         @Override
         public String toString() {
