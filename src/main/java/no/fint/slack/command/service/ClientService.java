@@ -13,10 +13,7 @@ import no.fint.slack.command.model.SseClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 @Service
@@ -31,13 +28,21 @@ public class ClientService {
     public SlashCommandResponse getClients(Command command) {
         return SlashCommandResponse.builder()
                 .text("Clients")
-                .blocks(getLayoutBlocks(command.getParameters().get(0), command.getParameters().get(1)))
+                .blocks(getClientListLayoutBlock(command.getParameters().get(0), command.getParameters().get(1)))
                 .responseType(SlashCommandResponseType.EPHEMERAL)
                 .build();
     }
 
-    private List<LayoutBlock> getLayoutBlocks(String environment, String componentUri) {
-        List<SseClients> sseClients = Arrays.asList(Objects.requireNonNull(clientsWebClient.get(
+    public SlashCommandResponse getClientByAsset(Command command) {
+        return SlashCommandResponse.builder()
+                .text("Clients")
+                .blocks(getClientByAssetLayoutBlock(command.getParameters().get(0), command.getParameters().get(1), command.getParameters().get(2)))
+                .responseType(SlashCommandResponseType.EPHEMERAL)
+                .build();
+    }
+
+    private List<SseClients> getClientsFromComponent(String environment, String componentUri) {
+        return Arrays.asList(Objects.requireNonNull(clientsWebClient.get(
                 String.format(
                         config.getSseClientsUriTemplate(),
                         environment,
@@ -45,34 +50,21 @@ public class ClientService {
                 ))
                 .bodyToMono(SseClients[].class).block()));
 
+    }
+
+    private List<LayoutBlock> getClientByAssetLayoutBlock(String environment, String componentUri, String asset) {
+        Optional<SseClients> sseClients = getClientsFromComponent(environment, componentUri)
+                .stream()
+                .filter(c -> c.getOrgId().equals(asset))
+                .findFirst();
         List<LayoutBlock> blocks = new ArrayList<>();
-
-
-        blocks.add(
-                SectionBlock
-                        .builder()
-                        .text(MarkdownTextObject
-                                .builder()
-                                .text(String.format("*Listing clients for* `https://%s.felleskomponent.no/%s`:", environment, componentUri))
-                                .build()
-                        )
-                        .build()
-
-        );
-
-
-        sseClients.forEach(clients -> {
-            blocks.add(
-                    SectionBlock
-                            .builder()
-                            .text(MarkdownTextObject
-                                    .builder()
-                                    .text(String.format("*Clients for* `%s` *(%s)*:", clients.getOrgId(), clients.getClients().size()))
-                                    .build()
-                            )
-                            .build()
+        sseClients.ifPresent(clients -> {
+            blocks.add(SectionBlock.builder().text(MarkdownTextObject
+                    .builder()
+                    .text(String.format("*Registered clients for* `%s` *:*", clients.getOrgId()))
+                    .build())
+                    .build()
             );
-            /*
             blocks.add(new DividerBlock());
             clients.getClients().forEach(client -> {
                 blocks.add(SectionBlock
@@ -98,10 +90,52 @@ public class ClientService {
                         .build()
                 );
                 blocks.add(new DividerBlock());
-
             });
-             */
         });
+
+        return blocks;
+
+    }
+
+    private List<LayoutBlock> getClientListLayoutBlock(String environment, String componentUri) {
+        List<SseClients> sseClients = getClientsFromComponent(environment, componentUri);
+        List<LayoutBlock> blocks = new ArrayList<>();
+
+        blocks.add(
+                SectionBlock
+                        .builder()
+                        .text(MarkdownTextObject
+                                .builder()
+                                .text(String.format("*Listing clients for* `https://%s.felleskomponent.no/%s`:",
+                                        environment,
+                                        componentUri)
+                                )
+                                .build()
+                        )
+                        .build()
+
+        );
+        blocks.add(new DividerBlock());
+
+        List<String> clientList = new ArrayList<>();
+        sseClients.forEach(clients -> clientList.add(
+                String.format("- `%s` clients for `%s`",
+                        clients.getClients().size(),
+                        clients.getOrgId())
+                )
+        );
+
+        blocks.add(
+                SectionBlock
+                        .builder()
+                        .text(MarkdownTextObject
+                                .builder()
+                                .text(String.join("\n", clientList))
+                                .build()
+                        )
+                        .build()
+        );
+        blocks.add(new DividerBlock());
 
         return blocks;
 

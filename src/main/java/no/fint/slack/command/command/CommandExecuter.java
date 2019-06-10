@@ -61,11 +61,14 @@ public class CommandExecuter {
         return Optional.empty();
     }
 
-    // /fint get clients api administrasjon/personal
+    // /fint get clients api administrasjon/personal [fintlabs.no]
     private Optional<SlashCommandResponse> onClientsCommand(Command command) {
 
         if (command.getParameters().size() == 2) {
             return Optional.ofNullable(clientService.getClients(command));
+        }
+        if (command.getParameters().size() == 3) {
+            return Optional.ofNullable(clientService.getClientByAsset(command));
         }
         return Optional.empty();
     }
