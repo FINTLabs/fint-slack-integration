@@ -29,7 +29,13 @@ public class HelpService {
                                 .builder()
                                 .text(MarkdownTextObject
                                         .builder()
-                                        .text("```Commands:\n\tget\n\thelp\n\nGet command:\n\thealth [environment]\t Shows health status\n\tenvs                     Lists environments```")
+                                        .text("```Commands:\n\t" +
+                                                "get\n\t" +
+                                                "help\n\n" +
+                                                "Get command:\n\t" +
+                                                "health [environment]                         Shows health status\n\t" +
+                                                "envs                                         Lists environments\n\t" +
+                                                "clients environment componentUri [assetId]   Lists registered clients```")
                                         .build()
                                 )
                                 .build()

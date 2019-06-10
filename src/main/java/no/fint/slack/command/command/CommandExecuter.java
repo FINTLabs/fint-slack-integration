@@ -1,6 +1,7 @@
 package no.fint.slack.command.command;
 
 import com.github.seratch.jslack.app_backend.slash_commands.response.SlashCommandResponse;
+import no.fint.slack.command.service.ClientService;
 import no.fint.slack.command.service.EnvironmentService;
 import no.fint.slack.command.service.HealthService;
 import no.fint.slack.command.service.HelpService;
@@ -17,6 +18,9 @@ public class CommandExecuter {
 
     @Autowired
     private HelpService helpService;
+
+    @Autowired
+    private ClientService clientService;
 
     @Autowired
     private EnvironmentService environmentService;
@@ -50,6 +54,21 @@ public class CommandExecuter {
             if (command.getSubCommand().equals(Commands.Sub.ENVS)) {
                 return Optional.ofNullable(environmentService.getEnvironments());
             }
+            if (command.getSubCommand().equals(Commands.Sub.CLIENTS)) {
+                return onClientsCommand(command);
+            }
+        }
+        return Optional.empty();
+    }
+
+    // /fint get clients api administrasjon/personal [fintlabs.no]
+    private Optional<SlashCommandResponse> onClientsCommand(Command command) {
+
+        if (command.getParameters().size() == 2) {
+            return Optional.ofNullable(clientService.getClients(command));
+        }
+        if (command.getParameters().size() == 3) {
+            return Optional.ofNullable(clientService.getClientByAsset(command));
         }
         return Optional.empty();
     }

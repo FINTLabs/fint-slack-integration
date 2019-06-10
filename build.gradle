@@ -32,6 +32,7 @@ dependencies {
 
 
     implementation('no.fint:fint-event-model:3.0.0')
+    implementation('no.fint:fint-oauth-token-service:1.5.1-alpha-6')
 
 
     compileOnly 'org.projectlombok:lombok'
